@@ -2,7 +2,7 @@ import os
 import sys
 
 # Threshold in seconds (you can change this later)
-THRESHOLD = 16
+THRESHOLD = 10
 
 # Get build time from GitHub environment
 build_time = float(os.getenv("BUILD_TIME", 0))
