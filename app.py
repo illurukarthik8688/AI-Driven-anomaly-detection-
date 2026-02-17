@@ -3,7 +3,7 @@ import joblib
 import numpy as np
 
 app = Flask(__name__)
-model = joblib.load("anomaly_model.pkl")
+model = joblib.load("failure_model.pkl")
 
 @app.route("/")
 def home():
