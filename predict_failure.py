@@ -6,7 +6,7 @@ model = joblib.load("failure_model.pkl")
 encoders = joblib.load("encoders.pkl")
 target_encoder = joblib.load("target_encoder.pkl")
 
-# Example pipeline stage (hardcoded for now)
+# Example pipeline s tage (hardcoded for now)
 new_data = {
     "stage_name": "Deploy",
     "job_name": "deploy_to_dev",
