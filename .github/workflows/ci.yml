@@ -1,38 +1,37 @@
 name: CI Pipeline
 
 on:
-push:
-branches:
-- main
+  push:
+    branches:
+      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-    
+
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
-    
+
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-    
+
       - name: AI Failure Prediction
         run: python predict_failure.py
-    
+
       - name: LLM Self Healing
         if: failure()
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python self_healing/llm_agent.py
-    
+
       - name: Measure Build Time
         run: |
           start=$(date +%s)
@@ -41,13 +40,12 @@ jobs:
           build_time=$((end-start))
           echo "BUILD_TIME=$build_time" >> $GITHUB_ENV
           echo "Build Time: $build_time seconds"
-    
+
       - name: Detect Build Time Anomaly
         run: python detect_build_time.py
-    
+
       - name: Run Tests
         run: python test.py
-    
+
       - name: Build Docker Image
         run: docker build -t cicd-anomaly .
-
