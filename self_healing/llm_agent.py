@@ -1,10 +1,8 @@
-import google.generativeai as genai
+from google import genai
 import os
 
 # Load API key
-genai.configure(api_key=os.getenv("GEMINI_API_KEY"))
-
-model = genai.GenerativeModel("gemini-1.5-flash")
+client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
 
 def get_healing_action(stage, job, task):
 
@@ -26,7 +24,10 @@ def get_healing_action(stage, job, task):
     - ignore
     """
 
-    response = model.generate_content(prompt)
+    response = client.models.generate_content(
+        model="gemini-1.5-flash",
+        contents=prompt
+    )
 
     return response.text
 

@@ -46,7 +46,7 @@ jobs:
         run: python test.py
 
       - name: Build Docker Image
-        run: docker build -t cicd-anomaly
+        run: docker build -t cicd-anomaly .
 
       - name: LLM Self Healing
         if: failure()
