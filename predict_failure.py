@@ -2,8 +2,8 @@ import joblib
 import numpy as np
 import sys
 
-from Self_Healing.llm_agent import get_healing_action
-from Self_Healing.healing_actions import execute_action
+from self_healing.llm_agent import get_healing_action
+from self_healing.healing_actions import execute_action
 
 model = joblib.load("failure_model.pkl")
 encoders = joblib.load("encoders.pkl")
