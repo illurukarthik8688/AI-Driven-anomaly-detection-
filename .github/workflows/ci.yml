@@ -6,54 +6,48 @@ branches:
 - main
 
 jobs:
-build:
-runs-on: ubuntu-latest
+  build:
+    runs-on: ubuntu-latest
 
 
-steps:
-  - name: Checkout Code
-    uses: actions/checkout@v3
-
-  - name: Set up Python
-    uses: actions/setup-python@v4
-    with:
-      python-version: "3.9"
-
-  - name: Install Dependencies
-    run: |
-      python -m pip install --upgrade pip
-      pip install -r requirements.txt
-
-  # Step 1: AI predicts if pipeline may fail
-  - name: AI Failure Prediction
-    run: python predict_failure.py
-
-  # Step 2: Run LLM self-healing only if failure detected
-  - name: LLM Self Healing
-    if: failure()
-    env:
-      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-    run: python self_healing/llm_agent.py
-
-  # Step 3: Measure build time
-  - name: Measure Build Time
-    run: |
-      start=$(date +%s)
-      python model.py
-      end=$(date +%s)
-      build_time=$((end-start))
-      echo "BUILD_TIME=$build_time" >> $GITHUB_ENV
-      echo "Build Time: $build_time seconds"
-
-  # Step 4: Detect build time anomaly
-  - name: Detect Build Time Anomaly
-    run: python detect_build_time.py
-
-  # Step 5: Run tests
-  - name: Run Tests
-    run: python test.py
-
-  # Step 6: Build Docker image
-  - name: Build Docker Image
-    run: docker build -t cicd-anomaly .
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+    
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+    
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+    
+      - name: AI Failure Prediction
+        run: python predict_failure.py
+    
+      - name: LLM Self Healing
+        if: failure()
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python self_healing/llm_agent.py
+    
+      - name: Measure Build Time
+        run: |
+          start=$(date +%s)
+          python model.py
+          end=$(date +%s)
+          build_time=$((end-start))
+          echo "BUILD_TIME=$build_time" >> $GITHUB_ENV
+          echo "Build Time: $build_time seconds"
+    
+      - name: Detect Build Time Anomaly
+        run: python detect_build_time.py
+    
+      - name: Run Tests
+        run: python test.py
+    
+      - name: Build Docker Image
+        run: docker build -t cicd-anomaly .
 
