@@ -26,11 +26,7 @@ jobs:
       - name: AI Failure Prediction
         run: python predict_failure.py
 
-      - name: LLM Self Healing
-        if: failure()
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python self_healing/llm_agent.py
+      
 
       - name: Measure Build Time
         run: |
@@ -42,10 +38,18 @@ jobs:
           echo "Build Time: $build_time seconds"
 
       - name: Detect Build Time Anomaly
+        continue-on-error: true
+
         run: python detect_build_time.py
 
       - name: Run Tests
         run: python test.py
 
       - name: Build Docker Image
-        run: docker build -t cicd-anomaly .
+        run: docker build -t cicd-anomaly
+
+      - name: LLM Self Healing
+        if: failure()
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: python self_healing/llm_agent.py  .
