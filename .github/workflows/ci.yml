@@ -18,46 +18,8 @@ jobs:
         with:
           python-version: "3.9"
 
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-
-      - name: AI Failure Prediction
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python predict_failure.py
-
-      
-
-      - name: Measure Build Time
-        run: |
-          start=$(date +%s)
-          python model.py
-          end=$(date +%s)
-          build_time=$((end-start))
-          echo "BUILD_TIME=$build_time" >> $GITHUB_ENV
-          echo "Build Time: $build_time seconds"
-
-      - name: Detect Build Time Anomaly
-        continue-on-error: true
-
-        run: python detect_build_time.py
-
-      - name: Run Tests
-        id: tests
-        run: |
-          python test.py || echo "TEST_FAILED=true" >> $GITHUB_ENV
-
-      - name: Build Docker Image
-        run: docker build -t cicd-anomaly .
-
-      - name: LLM Self Healing
-        if: env.TEST_FAILED == 'true'
+      - name: Run Autonomous Pipeline
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           PYTHONPATH: ${{ github.workspace }}
-        run: |
-          python self_healing/llm_agent.py
-          echo "Self-healing triggered successfully. Exiting with success code."
-          exit 0
+        run: python self_healing/pipeline_agent.py
