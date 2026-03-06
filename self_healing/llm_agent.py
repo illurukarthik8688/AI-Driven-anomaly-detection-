@@ -27,7 +27,7 @@ def get_healing_action(stage, job, task):
     """
 
     response = client.models.generate_content(
-        model="gemini-1.5-flash",
+        model="gemini-2.5-flash",
         contents=prompt
     )
 
