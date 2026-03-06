@@ -50,3 +50,6 @@ if __name__ == "__main__":
     
     # Actually execute the action
     execute_action(action)
+    print("Self-healing complete. Returning 0 exit code.")
+    import sys
+    sys.exit(0)
