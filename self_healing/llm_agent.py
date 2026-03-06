@@ -10,22 +10,26 @@ def get_healing_action(stage, job, task):
     client = genai.Client(api_key=api_key)
 
     prompt = f"""
-    You are an AI DevOps engineer.
+    You are an autonomous AI DevOps self-healing agent.
 
-    A CI/CD pipeline failed.
+    A CI/CD pipeline or deployment failed.
 
     Stage: {stage}
     Job: {job}
     Task: {task}
-
-    Suggest the best recovery action.
-    Reply ONLY with the exact name of the action, no explanation, no markdown.
+    
+    As an AI, you must automatically select the exact right DevOps action to execute to heal the system.
+    
+    Reply ONLY with the exact name of ONE of the actions below. No explanation, no markdown.
 
     Possible actions:
-    - restart_service
-    - rebuild_pipeline
-    - clear_cache
-    - ignore
+    - rollback_deploy (Use if new code is failing tests/crashing)
+    - restart_service (Use if service is hung or unresponsive)
+    - blue_green_switch (Use if green env is failing, fallback to blue)
+    - circuit_break (Use to stop cascading failures immediately)
+    - scale_up (Use if failure is due to high load/build time)
+    - clear_cache (Use if there are stale dependencies/cache issues)
+    - auto_ticket (Use if you cannot self-heal this and it needs a human)
     """
 
     response = client.models.generate_content(
