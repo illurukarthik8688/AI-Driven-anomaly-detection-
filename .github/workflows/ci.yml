@@ -54,4 +54,5 @@ jobs:
         if: failure()
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: python self_healing/llm_agent.py  .
+          PYTHONPATH: ${{ github.workspace }}
+        run: python self_healing/llm_agent.py
