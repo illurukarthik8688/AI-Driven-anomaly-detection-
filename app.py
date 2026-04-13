@@ -7,7 +7,7 @@ model = joblib.load("failure_model.pkl")
 
 @app.route("/")
 def home():
-    return "CICD pipeline hai bhai"
+    return "CICD pipeline"
 
 @app.route("/predict", methods=["POST"])
 def predict():
