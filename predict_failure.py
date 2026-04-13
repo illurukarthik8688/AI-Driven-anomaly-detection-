@@ -46,4 +46,4 @@ if predicted_status.lower() == "failed" and confidence > 0.6:
     sys.exit(1)
 
 else:
-    print("(YES, Correct) Safe to continue pipeline.")
+    print("✅ Safe to continue pipeline.")
